@@ -9,17 +9,19 @@ def send_email(html_body, job_count=0):
 
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
-    msg["From"] = f"Job Hunter Bot <{EMAIL_USER}>"
+    msg["From"] = EMAIL_USER
     msg["To"] = RECEIVER_EMAIL
 
     part = MIMEText(html_body, "html")
     msg.attach(part)
 
     try:
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+        with smtplib.SMTP("smtp-relay.brevo.com", 587) as server:
+            server.ehlo()
+            server.starttls()
             server.login(EMAIL_USER, EMAIL_PASS)
             server.sendmail(EMAIL_USER, RECEIVER_EMAIL, msg.as_string())
-        print(f"[INFO] Email sent to {RECEIVER_EMAIL}")
+        print(f"[INFO] Email sent successfully to {RECEIVER_EMAIL}")
     except Exception as e:
         print(f"[ERROR] Failed to send email: {e}")
         raise
