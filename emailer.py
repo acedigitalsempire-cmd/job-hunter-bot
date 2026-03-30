@@ -1,3 +1,4 @@
+import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -19,7 +20,7 @@ def send_email(html_body, job_count=0):
         with smtplib.SMTP("smtp-relay.brevo.com", 587) as server:
             server.ehlo()
             server.starttls()
-            server.login(EMAIL_USER, EMAIL_PASS)
+            server.login(os.getenv("SMTP_LOGIN"), EMAIL_PASS)
             server.sendmail(EMAIL_USER, RECEIVER_EMAIL, msg.as_string())
         print(f"[INFO] Email sent successfully to {RECEIVER_EMAIL}")
     except Exception as e:
