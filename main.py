@@ -36,11 +36,15 @@ def generate_html(jobs):
         skills_str = ", ".join(skills) if skills else "—"
         source = job.get("source", "Unknown")
         source_color = SOURCE_COLORS.get(source, "#555")
+        link = job.get("link", "#")
 
         rows += f"""
         <tr style="background: {bg};">
             <td style="padding: 12px; border-bottom: 1px solid #eee;">
-                <strong style="color: #2c3e50;">{job['title']}</strong>
+                <strong style="color: #2c3e50;">{job['title']}</strong><br>
+                <a href="{link}" style="color: #2ecc71; font-size: 12px; font-weight: bold;">
+                    🔗 Click to Apply
+                </a>
             </td>
             <td style="padding: 12px; border-bottom: 1px solid #eee; color: #555;">
                 {job['company']}
@@ -53,8 +57,10 @@ def generate_html(jobs):
                 border-radius: 10px; font-size: 11px;">{source}</span>
             </td>
             <td style="padding: 12px; border-bottom: 1px solid #eee;">
-                <a href="{job['link']}" style="background: #2ecc71; color: white; padding: 6px 14px;
-                   border-radius: 4px; text-decoration: none; font-weight: bold;">Apply →</a>
+                <a href="{link}" style="background: #2ecc71; color: white; padding: 8px 16px;
+                   border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px;">
+                   Apply →
+                </a>
             </td>
             <td style="padding: 12px; border-bottom: 1px solid #eee; color: #777; font-size: 12px;">
                 {keyword_str}
@@ -78,7 +84,8 @@ def generate_html(jobs):
     return f"""
     <html>
     <body style="font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; margin: 0;">
-        <div style="max-width: 1000px; margin: auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        <div style="max-width: 1000px; margin: auto; background: white; border-radius: 12px;
+             overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
 
             <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 30px; text-align: center;">
                 <h1 style="color: #f1c40f; margin: 0; font-size: 24px;">🎯 Daily Job Hunt Report</h1>
@@ -93,7 +100,7 @@ def generate_html(jobs):
                 <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
                     <thead>
                         <tr style="background: #2c3e50; color: white;">
-                            <th style="padding: 12px; text-align: left;">Job Title</th>
+                            <th style="padding: 12px; text-align: left;">Job Title & Link</th>
                             <th style="padding: 12px; text-align: left;">Company</th>
                             <th style="padding: 12px; text-align: left;">Location</th>
                             <th style="padding: 12px; text-align: left;">Source</th>
@@ -108,6 +115,29 @@ def generate_html(jobs):
                 </table>
             </div>
 
+            <div style="background: #f8f8f8; padding: 20px; text-align: center; border-top: 1px solid #eee;">
+                <p style="color: #aaa; font-size: 12px; margin: 0;">
+                    Sourced from RemoteOK 🔵 &nbsp; Remotive 🟣 &nbsp; WeWorkRemotely 🟢 &nbsp; Himalayas 🟠<br>
+                    Generated automatically by your Job Hunter Bot 🤖 — runs daily at 10AM Nigeria Time.
+                </p>
+            </div>
+
+        </div>
+    </body>
+    </html>
+    """
+
+
+def main():
+    print("[INFO] Starting Job Hunter Bot...")
+    jobs = fetch_jobs()
+    html = generate_html(jobs)
+    send_email(html, job_count=len(jobs))
+    print("[INFO] Done!")
+
+
+if __name__ == "__main__":
+    main()
             <div style="background: #f8f8f8; padding: 20px; text-align: center; border-top: 1px solid #eee;">
                 <p style="color: #aaa; font-size: 12px; margin: 0;">
                     Sourced from RemoteOK 🔵 &nbsp; Remotive 🟣 &nbsp; WeWorkRemotely 🟢 &nbsp; Himalayas 🟠<br>
